@@ -6,6 +6,8 @@ $router->get('/contact', 'controller/contact.php');
 
 $router->get('/notes', 'controller/notes/index.php');
 $router->post('/notes', 'controller/notes/store.php');
+$router->get('/notes/edit', 'controller/notes/edit.php');
+$router->patch('/notes/edit', 'controller/notes/update.php');
 $router->delete('/notes', 'controller/notes/destroy.php');
 
 $router->get('/note', 'controller/notes/show.php');
