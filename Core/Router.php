@@ -2,13 +2,19 @@
 
 namespace Core;
 
+use Core\Middleware\Middleware;
+
 class Router
 {
   protected $routes = [];
 
   public function add($method, $uri, $controller)
   {
-    $this->routes[] = compact('method', 'uri', 'controller');
+    $middleware = null;
+
+    $this->routes[] = compact('method', 'uri', 'controller', 'middleware');
+
+    return $this;
   }
 
   public function get($uri, $controller)
@@ -36,10 +42,19 @@ class Router
     return $this->add('DELETE', $uri, $controller);
   }
 
+  public function only($key)
+  {
+    $this->routes[array_key_last($this->routes)]['middleware'] = $key;
+    
+    return $this;
+  }
+
   public function route($uri, $method)
   {
     foreach ($this->routes as $route) {
       if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
+        Middleware::resolve($route['middleware']);
+
         return require base_path($route['controller']);
       }
     }
